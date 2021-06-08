@@ -39,8 +39,11 @@ st_check = [(0,0),(250, 300),(520, 910)]
 
 clear=[0,0,0,0,0,0] #check complete the Games
 
+#remember last position
 backup_x=[0,0,0,0,0,0]
 backup_y=[0,0,0,0,0,0] 
+
+#how many move using the buttons
 delta_x =0
 delta_y =0
 
@@ -50,7 +53,7 @@ state_y=0 #stage location var
 
 
 while True:
-    #draw.rectangle((0, 0, width, height), outline=0, fill=0)
+    draw.rectangle((0, 0,240, 240), outline=0, fill=0)
     if not su.button_U.value:  # up pressed
         delta_y-=20
     if not su.button_D.value:  # down pressed
@@ -67,10 +70,6 @@ while True:
         pass
     print("main",stage)
     
-    # if stage != 0:
-    #     image.paste(background, (0,0))
-        #image.paste(me, (delta_x,delta_y), me)
-
     if stage == 0:#In stage 0 #make func of hangmap ? 
         #background = img.back[0]
         stage, image, delta_x, delta_y = school.walk(draw, image, delta_x, delta_y, backup_x[0], backup_y[0],st_check,clear)

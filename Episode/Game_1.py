@@ -22,9 +22,9 @@ class Game1:
         self.stage =1
 
         self.rcolor = tuple(int(x * 255) for x in hsv_to_rgb(random.random(), 1, 1))
-        self.quiz_list=["Could a function of python get \n the only one return value?","How to make the \n'main' func in Python?"]
-        self.quiz_answer1=[("O",(0,255,0),True),("def main",(255,0,0),False)]
-        self.quiz_answer2=[("X",(255,0,0),False), ("def __main__",(0,255,0),True)]
+        self.quiz_list=["Could a function of python get \n the only one return value?","How to make the \n constructor in python?", "How to use modules in python?"]
+        self.quiz_answer1=[("O",(0,255,0),True),("def constructor",(255,0,0),False), ("import", (0,255,0), True)]
+        self.quiz_answer2=[("X",(255,0,0),False), ("def __init__",(0,255,0),True), ("module",(255,0,0), False)]
 
     
     def start(self,draw,image,disp):
@@ -87,26 +87,26 @@ class Game1:
     
     def quiz(self,image,draw):
         right = False
-        rand = random.randint(0,1)
+        rand = random.randint(0,len(self.quiz_list)-1)
         
         while True:
             
 
-            #print(rand)
+            print(rand)
             image.paste(img.back_1, (0,0))
             large = img.pro_kill.crop((0,0,120,120))
             large = large.resize((240, 240))
             image.paste(large, (35,0),large)
             draw.rectangle((0, 145,240, 240), outline=0, fill=0) # Draw a black filled box to clear the image.
             draw.text((0, 147), self.quiz_list[rand], font=img.fnt, fill=(255,255,255))
-            if not su.button_B.value:  # left pressed
+            if not su.button_B.value: 
                 draw.rectangle((0, 190,240, 210), outline=0, fill=self.quiz_answer1[rand][1])  # up, green, yes
                 right = self.quiz_answer1[rand][2]
                 if right:
                     self.correct +=1
                 else: 
                     self.wrong +=0.5
-            if not su.button_A.value:  # left pressed
+            if not su.button_A.value: 
                 draw.rectangle((0, 210,240, 230), outline=0, fill=self.quiz_answer2[rand][1]) #down, red, no
                 right = self.quiz_answer2[rand][2]
                 if right:
@@ -117,7 +117,7 @@ class Game1:
             #check the number of correct or wrong answer 
             print(self.correct, self.wrong)
 
-            
+            # if the answers are wrong at least 3 times, Game over 
             if (self.correct < self.wrong) and (self.wrong>3):
                 self.stage = -1 
                 image.paste(img.return_1,(0,0),img.return_1)
@@ -129,7 +129,8 @@ class Game1:
             draw.text((0, 190), self.quiz_answer1[rand][0], font=img.fnt, fill=(255,255,255))
             draw.text((0, 210), self.quiz_answer2[rand][0], font=img.fnt, fill=(255,255,255))
             su.disp.image(image)
-            if right:
+
+            if right: #If the answer is right
                 time.sleep(0.5)
                 draw.rectangle((0, 145,240, 240), outline=0, fill=0) # Draw a black filled box to clear the image.
                 draw.text((0, 147), "You are right..' \n Next time will be difficult.\n you'll be wrong!!", font=img.fnt, fill=(255,255,255))
