@@ -35,7 +35,7 @@ draw = ImageDraw.Draw(image)
 draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
 stage = 0
-st_check = [(0,0),(250, 300),(520, 910)]
+st_check = [(0,0),(250, 300),(520, 910), (1700, 380)]
 
 clear=[0,0,0,0,0,0] #check complete the Games
 
@@ -52,8 +52,38 @@ state_y=0 #stage location var
 
 
 
+
+#opening
+image.paste(img.opening, (0,0))
+su.disp.image(image)
+time.sleep(2) #2
+open_del = 0
+
 while True:
-    draw.rectangle((0, 0,240, 240), outline=0, fill=0)
+    draw.rectangle((0, 0,240, 240), outline=0, fill=(255,255,255))
+    image.paste(img.back[1],(0,0))
+    image.paste(img.me, (230-open_del,120), img.me)
+    su.disp.image(image)
+    time.sleep(0.5)
+    open_del+=30
+    
+    if (230-open_del)<120:
+        image.paste(img.back[1]),(0,0)
+        #draw.rectangle((0, 0,240, 240), outline=0, fill=(255,255,255))
+        large = img.me.crop((0,0,120,120))
+        large = large.resize((150, 150))
+        image.paste(large, (70,50),large)
+        draw.rectangle((0, 145,240, 240), outline=0, fill=0) # Draw a black filled box to clear the image.
+        draw.text((0, 147), "This is my \n university, KAU! \n I'm nervous!", font=img.fnt_big, fill=(255,255,255))
+        su.disp.image(image)
+        time.sleep(2)
+        break
+
+
+
+
+while True:
+    draw.rectangle((0, 0,240, 240), outline=0, fill=(255,255,255))
     if not su.button_U.value:  # up pressed
         delta_y-=20
     if not su.button_D.value:  # down pressed
@@ -69,7 +99,7 @@ while True:
     if not su.button_B.value:  # left pressed
         pass
     print("main",stage)
-    
+           
     if stage == 0:#In stage 0 #make func of hangmap ? 
         #background = img.back[0]
         stage, image, delta_x, delta_y = school.walk(draw, image, delta_x, delta_y, backup_x[0], backup_y[0],st_check,clear)

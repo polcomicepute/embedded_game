@@ -5,10 +5,11 @@ from PIL import Image, ImageDraw, ImageFont
 import utils
 import setup as su
 import images as img
+import Episode.Graduation as Graduation
 
 import Episode.Game_1 as Game_1
 
-
+graduation = Graduation.Graduation()
 game1 = Game_1.Game1()
 
 class School:
@@ -17,6 +18,7 @@ class School:
         self.stage =0
         
     def walk(self, draw, image, delta_x, delta_y, backup_x, backup_y, st_check,clear):
+        #draw.rectangle((0, 0,240, 240), outline=0, fill=(255,255,255))
         state_x = 0+delta_x
         state_y = 360+delta_y #430
         target = self.background.crop((state_x,state_y,state_x+360,state_y+360)) #start from upper_point(0,430) and down_point(360,690) 
@@ -27,10 +29,11 @@ class School:
 
         #background 
         image.paste(target, (0,0)) 
+        print(state_x,state_y)
         
 
 
-        if (state_x<630 and state_x >= st_check[1][0]) and state_y <= st_check[1][1]: 
+        if (state_x<630 and state_x >= st_check[1][0]) and state_y <= st_check[1][1]: #chagne to array !! 
             if clear[1] ==1:
                 print(state_x, state_y)
                 print("Already Finish!! ")
@@ -47,8 +50,9 @@ class School:
             # state_y=0
             # delta_x=0
             # delta_y=0 #stage0's var initialize
+        elif (state_x<1800 and state_x >= st_check[3][0]):
+            image = graduation.start(draw,image,su.disp)
         else:
             self.stage=0
-        
         return self.stage, image, delta_x, delta_y
     
