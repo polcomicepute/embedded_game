@@ -5,15 +5,17 @@ import board
 from digitalio import DigitalInOut, Direction
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
-import Episode.Enroll as Enroll
 import Episode.Game_1 as Game_1
 import setup as su
 import utils
 import images as img
 import Episode.School as School
+#import Episode.Game_1 as Game_1
+import currentStage 
 
-game1 = Game_1.Game1()
-school = School.School()
+#game1 = Game_1.Game1()
+curr_stage = currentStage.currentStage()
+#enroll=Enroll.Enroll()
 
 # Create blank image for drawing.
 # Make sure to create image with mode 'RGB' for color.
@@ -34,100 +36,28 @@ draw = ImageDraw.Draw(image)
 # Draw a black filled box to clear the image.
 draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
-stage = 0
-st_check = [(0,0),(250, 300),(520, 910), (1700, 380)]
-
-clear=[0,0,0,0,0,0] #check complete the Games
-
-#remember last position
-backup_x=[0,0,0,0,0,0]
-backup_y=[0,0,0,0,0,0] 
-
-#how many move using the buttons
-delta_x =0
-delta_y =0
-
-state_x=0
-state_y=0 #stage location var 
 
 
-
-
-#opening
-image.paste(img.opening, (0,0))
-su.disp.image(image)
-time.sleep(2) #2
-open_del = 0
-
-while True:
-    draw.rectangle((0, 0,240, 240), outline=0, fill=(255,255,255))
-    image.paste(img.back[1],(0,0))
-    image.paste(img.me, (230-open_del,120), img.me)
-    su.disp.image(image)
-    time.sleep(0.5)
-    open_del+=30
-    
-    if (230-open_del)<120:
-        image.paste(img.back[1]),(0,0)
-        #draw.rectangle((0, 0,240, 240), outline=0, fill=(255,255,255))
-        large = img.me.crop((0,0,120,120))
-        large = large.resize((150, 150))
-        image.paste(large, (70,50),large)
-        draw.rectangle((0, 145,240, 240), outline=0, fill=0) # Draw a black filled box to clear the image.
-        draw.text((0, 147), "This is my \n university, KAU! \n I'm nervous!", font=img.fnt_big, fill=(255,255,255))
-        su.disp.image(image)
-        time.sleep(2)
-        break
-
-
-
-
-while True:
+utils.enroll(image, draw)
+while True: 
     draw.rectangle((0, 0,240, 240), outline=0, fill=(255,255,255))
     if not su.button_U.value:  # up pressed
-        delta_y-=20
+        curr_stage.delta_y-=20
     if not su.button_D.value:  # down pressed
-        delta_y +=20
+        curr_stage.delta_y +=20
     if not su.button_L.value:  # left pressed
-        delta_x-=20
+        curr_stage.delta_x-=20
     if not su.button_R.value:  # right pressed
-        delta_x+=20
+        curr_stage.delta_x+=20
     if not su.button_C.value:  # center pressed
         pass
     if not su.button_A.value:  # left pressed
         pass
     if not su.button_B.value:  # left pressed
         pass
-    print("main",stage)
-           
-    if stage == 0:#In stage 0 #make func of hangmap ? 
-        #background = img.back[0]
-        stage, image, delta_x, delta_y = school.walk(draw, image, delta_x, delta_y, backup_x[0], backup_y[0],st_check,clear)
-        backup_x[0] = delta_x
-        backup_y[0] = delta_y
-    elif stage ==1: #In stage 1 
-        stage, image, delta_x, delta_y = game1.walk(draw,image,delta_x,delta_y,backup_x[1],backup_y[1])
-        backup_x[1] = delta_x
-        backup_y[1] = delta_y
-        if stage ==0:
-            clear[1]=1
-            delta_x =backup_x[0]
-            delta_y =backup_y[0]+60
-    elif stage ==2:#In stage 2
-        pass
-    elif stage ==3:#In stage 3
-        pass
-    elif stage ==4:
-        pass#In stage 4
-    elif stage ==5:
-        pass
-    elif stage==-1:# stage==-1 , Game Over
-        print("game over")
-        draw.rectangle((0, 0,240, 240), outline=0, fill=0) # Draw a black filled box to clear the image.
-        draw.text((0, 147), "Game Over", font=img.fnt_big, fill=(255,255,255))
-        su.disp.image(image)
-        break
-    image.paste(img.me, (80, 80),img.me) #me 
-        
-    su.disp.image(image)
+    
+
+    curr_stage.start(image,draw)
+
+
 
